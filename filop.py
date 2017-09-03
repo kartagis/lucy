@@ -1,5 +1,3 @@
-# dosya işlemlerinin döndüğü yer
-
 " filop --> file operations --> dosya işlemleri"
 import os
 
@@ -18,7 +16,7 @@ class Help():
                     pass
                 else:
                     if os.path.isdir(full_ex) and full_ex not in self.isdir:
-                        self.isdir.append(full_ex) # ve girilen driv deki sürücülerinde ki klasörleri kaydediyoruz
+                        self.isdir.append(full_ex)
         except PermissionError:
             pass
         except FileNotFoundError:
@@ -48,10 +46,9 @@ class Help():
                             self.isfile.append(full_ex) # ve girilen driv deki sürücülerinde ki klasörleri kaydediyoruz
         except PermissionError:
             pass
-        if type_==True:
-            return self.path_true
+        except FileNotFoundError:
+            pass
         return self.isfile
-
     def size(self,totaly=False):# normal çıktı verir liste veya dict değildir
      # totaly false şu demek eğer bir klasörün içindeki dosyaların boyutlarını bayt çinsinden hesaplamış
      # ve bunun kaç mb/gb oldugunu öğrenmek istiyorsan totaly=bulunan bayt miktarı girilmesi gerek yapmalısın
@@ -109,40 +106,41 @@ class Search():
 
 class Filop():
     """ python dosya işlemleri, ana sınıf bu """
-    def __init__(self,dont_us_search=True): # burada mantık hatası var
-        # dont_us_search eğer False ise arama fonskiyonlarını kullanamaz ve diğer işlemleri daha hızlı yapar
-        self.drivers=[] # ve pc de kullanılan sürücü yollarını buluyoruz
+    def __init__(self):
+        pass
+
+    def isdir(self): # pc deki tüm klasörleri bulan fonksiyon
+        isdir=[] # bu pc de ki tüm klasör lerin listesidir
+        for driving in self.drivers(): # burda sınıf çağırıldıgında bulunan sürücüleri alıyoruz
+            for i in Help(driving).folder(): # ve her bulunan sürücüdeki klasörleri yardım sayesinde buraya alıyoruz
+                if i not in isdir:
+                    isdir.append(i) # bulunan tüm klasör leri alıyorum
+                    yield i
+        for isd in isdir:# daha sonra sürekli genişleyecek olan isdir listesindeki klasörleri tekrar yardıma yollayıp pc deki
+            for fo in Help(isd).folder(): # tüm klasörleri buluyoruz:
+                if fo not in isdir:
+                    isdir.append(fo) # bulunan her klasörü genişlemesi için isdire ekliyoruz
+                    yield fo
+
+    def drivers(self): # ve pc de kullanılan sürücü yollarını buluyoruz
         extensions="qwertyuıopğüişlkjhgfdsazxcvbnmöç/"
         for ex in extensions:
             try:
                 os.listdir(str(ex)+":")
-                self.drivers.append(str(ex)+":"+os.sep)
+                yield str(ex)+":"+os.sep
             except:
                 pass
-        self.isdir=[] # bu pc de ki tüm klasör lerin listesidir
-        ####################### pc deki tüm klasörleri bulan fonksiyon #############
-        if dont_us_search==True:
-            for driving in self.drivers: # burda sınıf çağırıldıgında bulunan sürücüleri alıyoruz
-                for i in Help(driving).folder(): # ve her bulunan sürücüdeki klasörleri yardım sayesinde buraya alıyoruz
-                    self.isdir.append(i) # bulunan tüm klasör leri alıyorum
-            for isd in self.isdir:# daha sonra sürekli genişleyecek olan isdir listesindeki klasörleri tekrar yardıma yollayıp pc deki
-                for fo in Help(isd).folder(): # tüm klasörleri buluyoruz:
-                    if fo not in self.isdir:
-                        self.isdir.append(fo) # bulunan her klasörü genişlemesi için isdire ekliyoruz
-        ###########################################################################
+
     def searchfile(self,word,type_=None): # aranan kelime ile işlesen dosya isimlerini bulur liste olarak verir
-        show=[]
-        for isd in self.isdir :
+        for isd in self.isdir() :
             for add in Search(word,Help(driv=isd).file(type_=type_)).match:
-                show.append(add)
-        return show
+                yield add
 
     def searchfolder(self,word): # aranan kelime mile eşleşen dosyaları bulur ve liste olarak verir
-        show=[]
-        for isd in self.isdir:
-            for add in Search(word,Help(driv=isd).folder()).match:
-                    show.append(add)
-        return show
+        for isd in self.isdir():
+            for add in Search(word,Help(driv=isd).folder()).match: # burda bir kod ve işlem fazlalığı varmış gibi geliyor ama
+            # kodu düzeltince sonuç alınmıyor anlamadım
+                yield add
 
     def open(self,path): # list or str girilen yoldaki dosya yı açar liste veya str olarak girilebilir
         liste=[]
