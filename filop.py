@@ -12,7 +12,7 @@ class Help():
         try:
             for sea in os.listdir(self.driv):
                 full_ex=os.path.join(self.driv,sea)
-                if "windows" in full_ex.lower(): # burda amaç pc deki windows klasöründe arama yapmamasını sağlamak
+                if os.environ["SYSTEMROOT"].lower() == full_ex.lower(): # burda amaç pc deki windows klasöründe arama yapmamasını sağlamak
                     pass
                 else:
                     if os.path.isdir(full_ex) and full_ex not in self.isdir:
