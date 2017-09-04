@@ -1,9 +1,11 @@
-from assis import lucy
+from assis import lucy,record_data
 
-"""lucy("open d c")
+lucy("open d c") # open drivers d:\ or c:\
 lucy("search folder name python")
 lucy("hey lucy")
 lucy("search drivers")
-lucy("search file name django")"""
+lucy("search file name django")
+lucy("open Google chrome")
 
-lucy("open Google and hakan")
+while True:
+    lucy(record_data())

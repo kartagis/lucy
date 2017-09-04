@@ -7,21 +7,57 @@ import mutagen
 import filop as fi
 from numbers import number
 
-def commands_ex():
+def help():
     cds="""
-    + what time is it
-    + search
-      - web search
-      + file search
-        - search drivers #to find the all drivers from pc
-        - search all folder # to find the all folder from pc
-        - search folder name ....
-        + search file name ....
+    # you can check or run with talking
 
+     commands that can be executed by the program
+     ---------
+
+      use as follow
+      -----
+
+      ```python
+      from assis import lucy,record_data
+      lucy(record_data())
+      ```
+     - and you can speak
+
+      example speak ;
+      ------
+      - hey lucy
+      - help
+      + you can learn the time
+        - what time is it
+      + you can search
+        - search drivers #to find the all drivers from pc
+        - search folder name new file
+        - search file name readme
+        - search all folder # to find the all folder from pc
+      + you can open drivers of your computer
+        - open d
+        - open d and c
+      + you can run defined applications on your desktop
+        - open google chrome
+        - open media player
+
+
+    # you can check with commands instead of talking
+
+    example ;
+     ------
+    ```python
+     from assis import lucy
+
+     lucy("open d c") # open drivers d:\ or c:\
+     lucy("help")
+     lucy("search folder name python")
+     lucy("hey lucy")
+     lucy("search drivers")
+     lucy("search file name django")
+     lucy("open Google chrome")
+     ```
     """
-    #- search file name ... format text and picture and video ...
-    #- open  # This function will open files or folders
-    #- size
     print(cds)
 
 class Search(): # arama işlemleri
@@ -40,7 +76,7 @@ class Search(): # arama işlemleri
             self.web()
 
     def file(self): # dosya arama işlemi
-        data = self.data.replace("file name","").replace(" ","")
+        data = self.data.replace("file name ","").replace(" ","")
         speak("I started searcing for you, sir ,file searched   "+data,False)
         for files in fi.Filop().searchfile(data):
             print((str(self.number)+" <<< found files >>> "+files).encode("utf-8"))
@@ -91,7 +127,7 @@ class Open(): # uygulama klasör vs açma işlemleri
         self.list = list_to_be_opened
         self.desktop_path=os.environ["HOMEDRIVE"]+os.environ["HOMEPATH"]+"\Desktop"
         for x in fi.Filop().drivers(): # sürücüler ile eşleşme olursa açar
-            for y in self.data.split():
+            for y in self.data.split("and"):
                 y+=":\\"
                 if x == y:
                     self.dopen(x)
@@ -163,8 +199,5 @@ def lucy(data):
         Search(data)
     elif "open" in data:
         Open(None,data)
-
-#speak("Hi, I am lucy, what can I do ,for you?")
-#commands_ex() # şuanlık yapabildiği şeyleri gösteriyor
-#while True:
-    #lucy(record_data())
+    elif "help" == data:
+        help()
