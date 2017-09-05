@@ -4,10 +4,12 @@ import os
 class Help():
     """Bu yardım sınıfı SEARCH sınıfına yardım etmesi için yazıldı ve
      amacı girilen uzantılardaki tüm dosları ve klasörleri bulmaktır"""
+
     def __init__(self,driv):
         self.isdir=[] # bu bulunan klasör leri geçeci depoluyor
         self.isfile=[] # bu bulunan dosyaların geçesi depo listesidir
         self.driv=driv # girilen driver yani sürücü işte
+
     def folder(self):# girilen uzantının altındaki klasör lerin bbulur vemliste olarak verir
         try:
             for sea in os.listdir(self.driv):
@@ -23,8 +25,11 @@ class Help():
             pass
         return self.isdir
 
-    def file(self,type_=None): # girilen uzantının altındaki dosya ları bulup liste olarak verir
-        # type_=None ise tür araması yapmak istemiyordur
+    def file(self,type_=None):
+        """
+        girilen uzantının altındaki dosya ları bulup liste olarak verir
+        type_=None ise tür araması yapmak istemiyordur
+        """
         try:
             for sea in os.listdir(self.driv):
                 full_ex=os.path.join(self.driv,sea)
@@ -49,9 +54,13 @@ class Help():
         except FileNotFoundError:
             pass
         return self.isfile
-    def size(self,totaly=False):# normal çıktı verir liste veya dict değildir
-     # totaly false şu demek eğer bir klasörün içindeki dosyaların boyutlarını bayt çinsinden hesaplamış
-     # ve bunun kaç mb/gb oldugunu öğrenmek istiyorsan totaly=bulunan bayt miktarı girilmesi gerek yapmalısın
+
+    def size(self,totaly=False):
+        """
+        normal çıktı verir liste veya dict değildir
+        totaly false şu demek eğer bir klasörün içindeki dosyaların boyutlarını bayt çinsinden hesaplamış
+        ve bunun kaç mb/gb oldugunu öğrenmek istiyorsan totaly=bulunan bayt miktarı girilmesi gerek yapmalısın
+        """
         size_int=os.stat(self.driv).st_size # her dosyanın boyutunu alıyoruz
         size_str=str(size_int) # bir int bir de str kopya cıkartıyoruz
         if totaly!=False:
@@ -82,18 +91,18 @@ class Search():
         self.word_list=word_list
         for word_l in self.word_list:
             word_l=word_l.lower()
-            if self.word==os.path.split(word_l)[1] and word_l not in self.match: # bu tam eşleşme olanları alıyor önce
+            temp = os.path.split(word_l)[1]
+            if self.word == temp and word_l not in self.match: # bu tam eşleşme olanları alıyor önce
                 self.match.append(word_l)
 
-            elif self.word in os.path.split(word_l)[1] and word_l not in self.match:
+            elif self.word in temp and word_l not in self.match:
                 self.match.append(word_l)
 
             # bura da tam eşitlik olmasada girilen kelime nın harf sayısından yarısından fazla ile eşlesirse
             number=0
-            word_l=word_l.lower()
             while True:
                 try:
-                    if os.path.split(word_l)[1][number]==self.word[number] and word_l not in self.match:
+                    if temp[number]==self.word[number] and word_l not in self.match:
                         number+=1
                     else:
                         if number>int(len(self.word)/2) and word_l not in self.match:

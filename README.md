@@ -14,24 +14,24 @@
 
   example speak ;
   ------
-  - hey lucy
   - help
   + you can learn the time
     - what time is it
+    - what time
+    - time
   + you can search
     - search drivers #to find the all drivers from pc
     - search folder name new file
+    - search all folder # to find the all folder from pc
     + search file name readme
       - open 6
-    - search all folder # to find the all folder from pc
     + search on web python
       - open 10
   + you can open drivers of your computer
     - open d driver
-    - open d c drivers
   + you can run defined applications on your desktop
-    - open application google chrome
-    - open application media player
+    - open google chrome application
+    - open media player application
 
 
 # you can check with commands instead of talking
@@ -42,9 +42,8 @@ example ;
 
 from assis import lucy,record_data,Search
 
-lucy("open d c drivers") # open drivers d:\ or c:\
+lucy("open d drivers")
 lucy("search folder name python")
-lucy("hey lucy")
 lucy("search drivers")
 lucy("search file name django")
 lucy("open chrome applications")
@@ -53,9 +52,9 @@ lucy("search on web python programming")
 
 lucy(record_data())
 
-Search("search on web face")
-Search("driver")
-Search("folder name python")
-Search("file name python")
-Search("all folder")
+Search("search driver")
+Search("search folder name python")
+Search("search file name python")
+Search("search all folder")
+
  ```
