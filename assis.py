@@ -37,9 +37,10 @@ class Search(): # arama işlemleri
             speak("the file search is over, sir")
             while True:
                 data=record_data("open folder or file")
-                if "open" in data:
+                num = re.search("^open ([0-9])$",data)
+                if num != None:
                     try:
-                        Open(urls,data)
+                        Open(self.files_,num.group(1))
                         break
                     except:
                         pass
@@ -65,12 +66,13 @@ class Search(): # arama işlemleri
                 speak("the folder search is over, sir")
                 while True:
                     data=record_data("open folder or file")
-                    if "open" in data:
+                    num = re.search("^open ([0-9])$",data)
+                    if num != None:
                         try:
-                            Open(urls,data)
+                            Open(self.folders_,num.group(1))
                             break
-                        except ValueError as error:
-                            print(error)
+                        except:
+                            pass
                     elif data != "":
                         lucy(record_data())
                         break
@@ -96,7 +98,7 @@ class Search(): # arama işlemleri
                     break
                 except:
                     pass
-            else:
+            elif data != "":
                 lucy(record_data())
                 break
 

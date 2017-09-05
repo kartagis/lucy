@@ -1,6 +1,6 @@
 from assis import lucy,record_data,Search
 
-
+"""
 lucy("open d drivers")
 lucy("search folder name python")
 lucy("search drivers")
@@ -15,3 +15,6 @@ Search("search driver")
 Search("search folder name python")
 Search("search file name python")
 Search("search all folder")
+"""
+while True:
+   lucy(record_data())
