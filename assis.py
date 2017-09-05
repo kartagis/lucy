@@ -5,8 +5,8 @@ import os
 import time
 import mutagen
 
-from filop import Filop
 from numbers import number
+from filop import Filop
 from abouturl import General,Youtube
 
 def help():
@@ -34,14 +34,17 @@ def help():
       + you can search
         - search drivers #to find the all drivers from pc
         - search folder name new file
-        - search file name readme
+        + search file name readme
+          - open 6
         - search all folder # to find the all folder from pc
+        + search on web python
+          - open 10
       + you can open drivers of your computer
-        - open d
-        - open d and c
+        - open d driver
+        - open d c drivers
       + you can run defined applications on your desktop
-        - open google chrome
-        - open media player
+        - open application google chrome
+        - open application media player
 
 
     # you can check with commands instead of talking
@@ -49,16 +52,27 @@ def help():
     example ;
      ------
     ```python
-     from assis import lucy
 
-     lucy("open d c") # open drivers d:\ or c:\
-     lucy("help")
-     lucy("search folder name python")
-     lucy("hey lucy")
-     lucy("search drivers")
-     lucy("search file name django")
-     lucy("open Google chrome")
+    from assis import lucy,record_data,Search
+
+    lucy("open d c drivers") # open drivers d:\ or c:\
+    lucy("search folder name python")
+    lucy("hey lucy")
+    lucy("search drivers")
+    lucy("search file name django")
+    lucy("open chrome applications")
+    lucy("search on web face")
+    lucy("search on web python programming")
+
+    lucy(record_data())
+
+    Search("search on web face")
+    Search("driver")
+    Search("folder name python")
+    Search("file name python")
+    Search("all folder")
      ```
+
     """
     print(cds)
 
@@ -89,9 +103,14 @@ class Search(): # arama işlemleri
             while True:
                 data=record_data("open folder or file")
                 if "open" in data:
-                    Open(folders_,data)
-                else:
+                    try:
+                        Open(urls,data)
+                        break
+                    except:
+                        pass
+                elif data != "":
                     lucy(record_data())
+                    break
 
     def folder(self): # klasör arama işlemi
         if "all folder" in self.data:
@@ -111,9 +130,14 @@ class Search(): # arama işlemleri
                 while True:
                     data=record_data("open folder or file")
                     if "open" in data:
-                        Open(folders_,data)
-                    else:
+                        try:
+                            Open(urls,data)
+                            break
+                        except ValueError as error:
+                            print(error)
+                    elif data != "":
                         lucy(record_data())
+                        break
 
     def drivers(self): # sürücü arama işlemi
         drivers = [x for x in Filop().drivers()]
@@ -129,9 +153,15 @@ class Search(): # arama işlemleri
                 urls.append(url[0])
                 print((str(self.number)+". <<< >>> "+url[1]).encode("utf-8"))
             while True:
-                data = record_data("do you want open these urls, chose number")
+                data = record_data("do you want open these urls, chose number or say sameting...")
                 if "open" in data:
-                    Open(urls,data)
+                    try:
+                        Open(urls,data)
+                        break
+                    except:
+                        pass
+                else:
+                    lucy(record_data())
                     break
 
 
@@ -182,9 +212,6 @@ class Open(): # uygulama klasör vs açma işlemleri
         os.startfile(path)
         print(path)
         speak(name+" is open , sir")
-
-
-
 
 def speak(audioString,sleep=True): # bir yazıyı okutmak için
     print(audioString)

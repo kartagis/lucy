@@ -12,7 +12,7 @@ class Help():
         try:
             for sea in os.listdir(self.driv):
                 full_ex=os.path.join(self.driv,sea)
-                if os.environ["SYSTEMROOT"].lower() == full_ex.lower(): # burda amaç pc deki windows klasöründe arama yapmamasını sağlamak
+                if "windows" in full_ex.lower(): # burda amaç pc deki windows klasöründe arama yapmamasını sağlamak
                     pass
                 else:
                     if os.path.isdir(full_ex) and full_ex not in self.isdir:
@@ -80,11 +80,14 @@ class Search():
         self.word=word.lower()
         self.match=[] # bu aranan kelime ile eşleşen sonuçları depolar
         self.word_list=word_list
-        for word_l in self.word_list: # bu tam eşleşme olanları alıyor önce
-            word_l=word_l.lower()
-            if self.word==os.path.split(word_l)[1] and word_l not in self.match:
-                self.match.append(word_l)
         for word_l in self.word_list:
+            word_l=word_l.lower()
+            if self.word==os.path.split(word_l)[1] and word_l not in self.match: # bu tam eşleşme olanları alıyor önce
+                self.match.append(word_l)
+
+            elif self.word in os.path.split(word_l)[1] and word_l not in self.match:
+                self.match.append(word_l)
+
             # bura da tam eşitlik olmasada girilen kelime nın harf sayısından yarısından fazla ile eşlesirse
             number=0
             word_l=word_l.lower()
@@ -98,10 +101,6 @@ class Search():
                         break
                 except IndexError:
                     break
-        for word_l in self.word_list:
-            word_l=word_l.lower()
-            if self.word in os.path.split(word_l)[1] and word_l not in self.match:
-                self.match.append(word_l)
 
 
 class Filop():
