@@ -1,20 +1,19 @@
-from assis import lucy,record_data,Search
+from assis import Lucy,Search
 
-"""
-lucy("open d drivers")
-lucy("search folder name python")
-lucy("search drivers")
-lucy("search file name django")
-lucy("open chrome applications")
-lucy("search on web face")
-lucy("search on web python programming")
-
-lucy(record_data())
-
+Lucy(Lucy().listen())
+Lucy("open d drivers")
+Lucy("search folder name python")
+Lucy("search drivers")
+Lucy("search file name django")
+Lucy("open chrome applications")
+Lucy("search on web face")
+Lucy("search on web python programming")
 Search("search driver")
 Search("search folder name python")
 Search("search file name python")
 Search("search all folder")
-"""
-while True:
-   lucy(record_data())
+Lucy().talk("hello everyone")
+Lucy().talk("hello everyone",sleep = False)
+data = Lucy().listen("can i help yoo ?")
+data = Lucy().listen()
+read = Lucy().read("read this messages .")
