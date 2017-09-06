@@ -1,5 +1,15 @@
 [![Licence](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/hakancelik96/lucy/blob/master/LICENSE.txt)
 
+before
+---
+- pip install mutagen
+- pip install gTTS
+- pip install SpeechRecognition
+- pip install requests
+- pip install socket
+- pip install bs4
+
+
 # you can check or run with talking
 
  commands that can be executed by the program
