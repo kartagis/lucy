@@ -1,6 +1,4 @@
 [![Licence](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/hakancelik96/lucy/LICENCE.txt)
-[![Issues](https://img.shields.io/github/issues/badges/shields.svg)](https://github.com/hakancelik96/lucy/issues)
-[![Pull Requests](https://img.shields.io/github/issues-pr/cdnjs/cdnjs.svg)](https://github.com/hakancelik96/lucy/pulls)
 
 # you can check or run with talking
 
