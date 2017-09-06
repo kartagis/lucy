@@ -1,4 +1,4 @@
-[![Licence](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/hakancelik96/lucy/LICENCE.txt)
+[![Licence](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/hakancelik96/lucy/blob/master/LICENSE.txt)
 
 # you can check or run with talking
 
