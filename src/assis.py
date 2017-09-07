@@ -5,9 +5,10 @@ import os
 import time
 import mutagen
 import re
-from numbers import number
+from numbers_ import number
 from filop import Filop
 from abouturl import General
+from time import gmtime, strftime
 
 class Search(): # arama işlemleri
     def __init__(self,data):
@@ -139,7 +140,7 @@ class Lucy():
         self.data = data
         if self.data != None:
             if re.search("what time is it|what time|time",self.data) != None:
-                self.talk(time.asctime(time.localtime(time.time())))
+                self.talk(strftime("%Y-%m-%d %H:%M:%S", gmtime()))
             elif re.search("^search (driver|drivers|folder name .*|all folder|all folders|file name .*|on web .*)$",self.data) != None:
                 Search(self.data)
             elif re.search("^open (. driver|drivers)|[0-9]|.* applications|.* application$",self.data) != None:

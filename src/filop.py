@@ -1,5 +1,6 @@
 " filop --> file operations --> dosya işlemleri"
 import os
+from models import *
 
 class Help():
     """Bu yardım sınıfı SEARCH sınıfına yardım etmesi için yazıldı ve
@@ -114,21 +115,63 @@ class Search():
 
 class Filop():
     """ python dosya işlemleri, ana sınıf bu """
-    def __init__(self):
-        pass
+    def __init__(self,scan = False,year = 0,month = 0,day = 5):
+        """scan false demek program baştan sona tüm pc yi taramak yerine daha önceden depolamış olduğu veritabanından
+        bilgiyi alıp öyle arama yapacak,eğer daha önce kayıt etmemişse tarayıp kayıt edecek ve filop sınıfına girilmiş olanlar
+        parametrelerdeki tarhi geçmiş ise son kayıt tarihi tekrar tarayıp depolayacak,
+        eğer veri tabanı ile hiç uğraşmamak için veya yeni bir dosya arıyolar ise scan True yapılmalı"""
+        self.scan = scan
+        self.year = year
+        self.month = month
+        self.day = day
+        if self.scan == False: # eğer True olursa işlemler veritabanına bağlanmadan canlı olarak yapılır
+            import settings
+            from time import gmtime, strftime
+            self.s = settings.session()
+            try:
+                last_save = str(self.s.query(Folders).order_by(Folders.id)[0].time).split()[0].split("-")
+                now = str(strftime("%Y-%m-%d", gmtime())).split("-")
+                int(now[0])-int(last_save[0]) > self.year and int(now[1])-int(last_save[1])\
+                > self.month and int(now[2])-int(last_save[2]) > self.day
+                scan_is = False
+            except IndexError:
+                scan_is = True
+            if scan_is:
+                print("""güncel veriler kayıt ediliyor bu yüzden biraz zaman alabilir,
+ işlem bittikden sonra arama işlemleriniz daha hızlı olacaktır
+ --
+ mevcut kayıt kaydedilir, bu nedenle biraz zaman alabilir,
+işlem bittikten sonra aramanız daha hızlı olacak""")
+                try:
+                    os.remove(settings.db_name) # eski db yi siliyorum
+                except:
+                    pass
+                self.scan = True # bunu böyle yapıyorum ki anlık tarayıp verileri kayıt etsin
+                for i in self.isdir(): # bütün klasörleri ekliyorum
+                     data = Folders(path=i)
+                     self.s.add(data)
+                for i in self.searchfile(""): # bütün dosyaları ekliyorum
+                    data = Files(path=i)
+                    self.s.add(data)
+                self.s.commit() # ve kayıt ettim
+                self.scan = False # ve tekrar eski haline gelir
 
     def isdir(self): # pc deki tüm klasörleri bulan fonksiyon
-        isdir=[] # bu pc de ki tüm klasör lerin listesidir
-        for driving in self.drivers(): # burda sınıf çağırıldıgında bulunan sürücüleri alıyoruz
-            for i in Help(driving).folder(): # ve her bulunan sürücüdeki klasörleri yardım sayesinde buraya alıyoruz
-                if i not in isdir:
-                    isdir.append(i) # bulunan tüm klasör leri alıyorum
-                    yield i
-        for isd in isdir:# daha sonra sürekli genişleyecek olan isdir listesindeki klasörleri tekrar yardıma yollayıp pc deki
-            for fo in Help(isd).folder(): # tüm klasörleri buluyoruz:
-                if fo not in isdir:
-                    isdir.append(fo) # bulunan her klasörü genişlemesi için isdire ekliyoruz
-                    yield fo
+        if self.scan == False:
+            for isd in self.s.query(Folders).order_by(Folders.id):
+                print(isd)
+        else:
+            isdir=[] # bu pc de ki tüm klasör lerin listesidir
+            for driving in self.drivers(): # burda sınıf çağırıldıgında bulunan sürücüleri alıyoruz
+                for i in Help(driving).folder(): # ve her bulunan sürücüdeki klasörleri yardım sayesinde buraya alıyoruz
+                    if i not in isdir:
+                         isdir.append(i) # bulunan tüm klasör leri alıyorum
+                         yield i
+            for isd in isdir:# daha sonra sürekli genişleyecek olan isdir listesindeki klasörleri tekrar yardıma yollayıp pc deki
+                for fo in Help(isd).folder(): # tüm klasörleri buluyoruz:
+                    if fo not in isdir:
+                        isdir.append(fo) # bulunan her klasörü genişlemesi için isdire ekliyoruz
+                        yield fo
 
     def drivers(self): # ve pc de kullanılan sürücü yollarını buluyoruz
         extensions="qwertyuıopğüişlkjhgfdsazxcvbnmöç/"
@@ -139,16 +182,42 @@ class Filop():
             except:
                 pass
 
-    def searchfile(self,word,type_=None): # aranan kelime ile işlesen dosya isimlerini bulur liste olarak verir
-        for isd in self.isdir() :
-            for add in Search(word,Help(driv=isd).file(type_=type_)).match:
-                yield add
+    def searchfile(self,word,type_=None): # aranan kelime ile işlesen dosya isimlerini bulur
+        if self.scan == False:
+            for isd in self.s.query(Files).order_by(Files.id):
+                # type_ olayı yok burda eklenmesi gerek
+                isd_list = []# search de çalışabilmesi için liste yaptım
+                isd = isd.path
+                if type_!=None: # None değil ise dosya türü istiyordur
+                    if type(list(type_))==type(type_): # liste olarak belirli türleri isteyebilir
+                        for pat in type_:
+                            if isd.endswith("."+pat):
+                                isd_list.append(full_ex)
+                    elif type(str(type_))==type(type_):
+                        if isd.endswith("."+type_):
+                            isd_list.append(isd)
+                else:
+                    isd_list.append(isd)
+                for add in Search(word,isd_list).match:
+                    yield add
+        else:
+            for isd in self.isdir() :
+                for add in Search(word,Help(driv=isd).file(type_=type_)).match:
+                    yield add
 
-    def searchfolder(self,word): # aranan kelime mile eşleşen dosyaları bulur ve liste olarak verir
-        for isd in self.isdir():
-            for add in Search(word,Help(driv=isd).folder()).match: # burda bir kod ve işlem fazlalığı varmış gibi geliyor ama
-            # kodu düzeltince sonuç alınmıyor anlamadım
-                yield add
+    def searchfolder(self,word): # aranan kelime mile eşleşen dosyaları bulur
+        if self.scan == False:
+            for isd in self.s.query(Folders).order_by(Folders.id):
+                isd_list = []
+                isd_list.append(isd.path)
+                # type_ olayı yok burda eklenmesi gerek
+                for add in Search(word,isd_list).match:
+                    yield add
+        else:
+            for isd in self.isdir():
+                for add in Search(word,Help(driv=isd).folder()).match: # burda bir kod ve işlem fazlalığı varmış gibi geliyor ama
+                # kodu düzeltince sonuç alınmıyor anlamadım
+                    yield add
 
     def open(self,path): # list or str girilen yoldaki dosya yı açar liste veya str olarak girilebilir
         liste=[]
