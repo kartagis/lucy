@@ -2,20 +2,15 @@
 
 before
 ---
-- pip install mutagen
-- pip install gTTS
-- pip install SpeechRecognition
-- pip install requests
-- pip install socket
-- pip install bs4
+- pip install -r requirements.txt
 
 
-# you can check or run with talking
+# you can check or run by talking
 
  commands that can be executed by the program
  ---------
 
-  use as follow
+  use as follows
   -----
 
   ```python

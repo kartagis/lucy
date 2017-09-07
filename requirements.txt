@@ -1,0 +1,6 @@
+mutagen
+gTTS
+SpeechRecognition
+requests
+socket
+bs4
